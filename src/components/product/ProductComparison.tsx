@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/Button'
 import { useUIStore } from '@/stores/ui.store'
 import { useCartStore } from '@/stores/cart.store'
 import { useWishlistStore } from '@/stores/wishlist.store'
-import { formatPrice } from '@/lib/utils'
 import { Product } from '@/types'
 
 interface ProductComparisonProps {

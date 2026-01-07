@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { ShoppingCart, ArrowLeft } from 'lucide-react'
+import { ShoppingCart, ArrowLeft, Trash } from 'lucide-react'
 import Link from 'next/link'
 import { useCartStore } from '@/stores/cart.store'
 import { Button } from '@/components/ui/Button'
@@ -10,12 +10,12 @@ import { CartItem } from '@/components/cart/CartItem'
 
 export default function CartPage() {
   const { items, getTotal, clearCart } = useCartStore()
-  
+
   const subtotal = getTotal()
   const shipping = subtotal > 50 ? 0 : 9.99
   const tax = subtotal * 0.08
   const total = subtotal + shipping + tax
-  
+
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-16">
@@ -23,15 +23,15 @@ export default function CartPage() {
           <div className="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-6">
             <ShoppingCart className="h-12 w-12 text-gray-400" />
           </div>
-          
+
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
             Your cart is empty
           </h1>
-          
+
           <p className="text-gray-600 mb-8">
             Looks like you haven&apos;t added any items to your cart yet.
           </p>
-          
+
           <div className="space-y-4">
             <Link
               href="/shop"
@@ -39,7 +39,7 @@ export default function CartPage() {
             >
               Continue Shopping
             </Link>
-            
+
             <Link
               href="/"
               className="inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none active:scale-95 transition-transform border border-gray-300 hover:bg-gray-50 h-10 px-4 py-2 w-full"
@@ -51,13 +51,13 @@ export default function CartPage() {
       </div>
     )
   }
-  
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">
         Shopping Cart ({items.length} items)
       </h1>
-      
+
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
@@ -66,20 +66,21 @@ export default function CartPage() {
             <h2 className="text-lg font-semibold">Products</h2>
             <button
               onClick={clearCart}
-              className="flex items-center space-x-2 text-sm text-red-600 hover:text-red-700"
+              className="flex item s-center space-x-2 text-sm text-red-600 hover:text-red-700"
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash className="h-4 w-4" />
               <span>Clear cart</span>
             </button>
+
           </div>
-          
+
           {/* Items */}
           <div className="space-y-4">
             {items.map((item) => (
               <CartItem key={item.id} item={item} />
             ))}
           </div>
-          
+
           {/* Continue Shopping */}
           <div className="pt-4">
             <Link
@@ -91,32 +92,32 @@ export default function CartPage() {
             </Link>
           </div>
         </div>
-        
+
         {/* Order Summary */}
         <div className="lg:col-span-1">
           <div className="bg-gray-50 rounded-xl p-6 space-y-6 sticky top-24">
             <h2 className="text-xl font-bold text-gray-900">
               Order Summary
             </h2>
-            
+
             <div className="space-y-3">
               <div className="flex justify-between">
                 <span className="text-gray-600">Subtotal</span>
                 <span className="font-medium">{formatPrice(subtotal)}</span>
               </div>
-              
+
               <div className="flex justify-between">
                 <span className="text-gray-600">Shipping</span>
                 <span className={shipping === 0 ? "text-green-600 font-medium" : "font-medium"}>
                   {shipping === 0 ? 'FREE' : formatPrice(shipping)}
                 </span>
               </div>
-              
+
               <div className="flex justify-between">
                 <span className="text-gray-600">Tax</span>
                 <span className="font-medium">{formatPrice(tax)}</span>
               </div>
-              
+
               <div className="border-t pt-3">
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
@@ -124,7 +125,7 @@ export default function CartPage() {
                 </div>
               </div>
             </div>
-            
+
             <div className="space-y-3">
               <Link
                 href="/checkout"
@@ -132,7 +133,7 @@ export default function CartPage() {
               >
                 Proceed to Checkout
               </Link>
-              
+
               <Link
                 href="/shop"
                 className="inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none active:scale-95 transition-transform border border-gray-300 hover:bg-gray-50 h-10 px-4 py-2 w-full"
@@ -140,7 +141,7 @@ export default function CartPage() {
                 Continue Shopping
               </Link>
             </div>
-            
+
             {/* Payment Methods */}
             <div className="pt-4 border-t">
               <h3 className="text-sm font-semibold text-gray-900 mb-3">
@@ -153,7 +154,7 @@ export default function CartPage() {
                 <div className="w-10 h-6 bg-green-600 rounded"></div>
               </div>
             </div>
-            
+
             {/* Guarantee */}
             <div className="p-4 bg-green-50 rounded-lg">
               <div className="flex items-center space-x-2">

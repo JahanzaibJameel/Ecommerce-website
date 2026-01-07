@@ -32,12 +32,6 @@ export const FiltersSidebar: React.FC = () => {
   
   const ratings = [4, 3, 2, 1]
   
-  const handlePriceChange = (index: 0 | 1, value: number) => {
-    const newRange = [...priceRange] as [number, number]
-    newRange[index] = value
-    setPriceRange(newRange)
-  }
-  
   const hasActiveFilters = 
     category !== 'all' ||
     priceRange[0] > 0 ||
