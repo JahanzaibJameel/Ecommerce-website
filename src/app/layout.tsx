@@ -11,8 +11,23 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'UltimateShop - Premium E-commerce',
-  description: 'The ultimate e-commerce experience built with Next.js 14',
+  description: 'The ultimate e-commerce experience with modern design and exceptional performance',
   keywords: ['ecommerce', 'shopping', 'nextjs', 'typescript'],
+  manifest: '/manifest.json',
+  themeColor: '#0ea5e9',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+  robots: 'index, follow',
+  openGraph: {
+    title: 'UltimateShop - Premium E-commerce',
+    description: 'The ultimate e-commerce experience with modern design and exceptional performance',
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'UltimateShop - Premium E-commerce',
+    description: 'The ultimate e-commerce experience with modern design and exceptional performance',
+  },
 }
 
 export default function RootLayout({

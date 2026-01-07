@@ -44,7 +44,13 @@ export const Hero: React.FC = () => {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+      <div className="absolute inset-0 opacity-5" style={{
+        backgroundImage: `
+          linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+          linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)
+        `,
+        backgroundSize: '40px 40px'
+      }} />
 
       {/* Animated background elements */}
       <div className="absolute inset-0">
@@ -201,15 +207,6 @@ export const Hero: React.FC = () => {
           </motion.div>
         </motion.div>
       </div>
-
-      <style jsx>{`
-        .bg-grid-pattern {
-          background-image:
-            linear-gradient(to right, #e5e7eb 1px, transparent 1px),
-            linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);
-          background-size: 40px 40px;
-        }
-      `}</style>
     </motion.div>
   )
 }

@@ -130,11 +130,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         'relative overflow-hidden bg-gray-50',
         variant === 'grid' && 'aspect-square',
         variant === 'list' && 'w-48 h-48 flex-shrink-0'
-      )}>
+      )} style={{ position: 'relative' }}>
         <motion.div
           className="w-full h-full"
           variants={imageVariants}
           whileHover="hover"
+          style={{ position: 'relative' }}
         >
           <Image
             src={product.imageUrl}

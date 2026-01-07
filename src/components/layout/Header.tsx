@@ -1,21 +1,31 @@
 'use client'
 
-import React from 'react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingCart, Heart, Search, User, Menu, X } from 'lucide-react'
+import { ShoppingCart, Heart, Search, User, Menu, X, Moon, Sun, BarChart3 } from 'lucide-react'
 import { useCartStore } from '@/stores/cart.store'
 import { useUIStore } from '@/stores/ui.store'
+import { useFiltersStore } from '@/stores/filters.store'
+import { useTheme } from '@/app/providers'
 import { Button } from '@/components/ui/Button'
+import { AdvancedSearch } from '@/components/shared/AdvancedSearch'
+import { PerformanceDashboard } from '@/components/shared/PerformanceDashboard'
 
 export const Header: React.FC = () => {
+  const router = useRouter()
   const { getItemCount } = useCartStore()
+  const { setSearchQuery: setGlobalSearch } = useFiltersStore()
+  const { theme, toggleTheme } = useTheme()
   const {
     isMobileMenuOpen,
     toggleMobileMenu,
     openCart,
     openWishlist
   } = useUIStore()
+
+  const [showPerformanceDashboard, setShowPerformanceDashboard] = useState(false)
 
   const cartItemCount = getItemCount()
 
@@ -115,21 +125,10 @@ export const Header: React.FC = () => {
           
           {/* Action Buttons */}
           <div className="flex items-center space-x-2">
-            {/* Search Button */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="hidden sm:flex items-center space-x-2"
-                aria-label="Search"
-              >
-                <Search className="w-4 h-4" />
-                <span className="hidden lg:inline">Search</span>
-              </Button>
-            </motion.div>
+            {/* Advanced Search */}
+            <div className="hidden lg:block">
+              <AdvancedSearch className="w-96" />
+            </div>
 
             {/* Wishlist Button */}
             <motion.div
@@ -176,7 +175,7 @@ export const Header: React.FC = () => {
               </Button>
             </motion.div>
 
-            {/* User Account */}
+            {/* Theme Toggle */}
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -184,11 +183,29 @@ export const Header: React.FC = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="hidden sm:flex items-center space-x-2"
-                aria-label="Account"
+                onClick={toggleTheme}
+                aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
               >
-                <User className="w-4 h-4" />
-                <span className="hidden lg:inline">Account</span>
+                {theme === 'light' ? (
+                  <Moon className="w-4 h-4" />
+                ) : (
+                  <Sun className="w-4 h-4" />
+                )}
+              </Button>
+            </motion.div>
+
+            {/* Performance Dashboard */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowPerformanceDashboard(true)}
+                aria-label="Performance Dashboard"
+              >
+                <BarChart3 className="w-4 h-4" />
               </Button>
             </motion.div>
 
@@ -250,10 +267,19 @@ export const Header: React.FC = () => {
 
                 {/* Mobile Action Buttons */}
                 <div className="pt-4 border-t space-y-2">
+                  {/* Mobile Search */}
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: navigation.length * 0.1 }}
+                  >
+                    <AdvancedSearch />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navigation.length + 1) * 0.1 }}
                   >
                     <Button
                       variant="ghost"

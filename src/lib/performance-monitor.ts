@@ -11,6 +11,8 @@ interface PerformanceMetric {
 class PerformanceMonitor {
   private metrics: PerformanceMetric[] = []
   private observers: ((metric: PerformanceMetric) => void)[] = []
+  private lcpObserver: PerformanceObserver | null = null
+  private clsObserver: PerformanceObserver | null = null
 
   trackMetric(name: string, value: number, metadata?: Record<string, unknown>): void {
     const metric: PerformanceMetric = {
@@ -54,8 +56,8 @@ class PerformanceMonitor {
   }
 
   trackLCP(): void {
-    if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
-      const observer = new PerformanceObserver((list) => {
+    if (typeof window !== 'undefined' && 'PerformanceObserver' in window && !this.lcpObserver) {
+      this.lcpObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries()
         const lastEntry = entries[entries.length - 1]
         
@@ -65,15 +67,15 @@ class PerformanceMonitor {
         })
       })
 
-      observer.observe({ entryTypes: ['largest-contentful-paint'] })
+      this.lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] })
     }
   }
 
   trackCLS(): void {
-    if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
+    if (typeof window !== 'undefined' && 'PerformanceObserver' in window && !this.clsObserver) {
       let clsValue = 0
       
-      const observer = new PerformanceObserver((list) => {
+      this.clsObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           if (!(entry as any).hadRecentInput) {
             clsValue += (entry as any).value
@@ -83,7 +85,7 @@ class PerformanceMonitor {
         this.trackMetric('CLS', clsValue)
       })
 
-      observer.observe({ entryTypes: ['layout-shift'] })
+      this.clsObserver.observe({ entryTypes: ['layout-shift'] })
     }
   }
 

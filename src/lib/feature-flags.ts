@@ -4,7 +4,7 @@ export const FEATURE_FLAGS: Record<string, any> = {
   enableWishlist: true,
   enableProductReviews: false, // Launch without reviews
   enableAdvancedFilters: true,
-  enableDarkMode: false, // Phase 2 release
+  enableDarkMode: true, // Implemented with theme provider
   enableGuestCheckout: true,
   enableSocialLogin: false,
   enableOrderTracking: true,

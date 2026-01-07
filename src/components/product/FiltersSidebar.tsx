@@ -5,6 +5,7 @@ import { Filter } from 'lucide-react'
 import { useFiltersStore } from '@/stores/filters.store'
 import { cn } from '@/lib/utils'
 import { FilterCategory } from '@/types'
+import { Slider } from '@/components/ui/Slider'
 
 export const FiltersSidebar: React.FC = () => {
   const {
@@ -51,7 +52,7 @@ export const FiltersSidebar: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Filter className="h-5 w-5 text-gray-500" />
-          <h3 className="text-lg font-semibold">Filters</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Filters</h3>
         </div>
         
         {hasActiveFilters && (
@@ -66,7 +67,7 @@ export const FiltersSidebar: React.FC = () => {
       
       {/* Category Filter */}
       <div className="space-y-3">
-        <h4 className="font-medium text-gray-900">Category</h4>
+        <h4 className="font-medium text-gray-900 dark:text-gray-100">Category</h4>
         <div className="space-y-2">
           {categories.map((cat) => (
             <button
@@ -87,49 +88,19 @@ export const FiltersSidebar: React.FC = () => {
       
       {/* Price Range */}
       <div className="space-y-4">
-        <h4 className="font-medium text-gray-900">Price Range</h4>
-        
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm text-gray-600">
-            <span>${priceRange[0]}</span>
-            <span>${priceRange[1]}</span>
-          </div>
-          
-          <div className="relative h-2">
-            <input
-              type="range"
-              min="0"
-              max="1000"
-              step="10"
-              value={priceRange[0]}
-              onChange={(e) => handlePriceChange(0, parseInt(e.target.value))}
-              className="absolute w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
-              style={{
-                background: `linear-gradient(to right, 
-                  #e5e7eb 0%, 
-                  #e5e7eb ${(priceRange[0] / 1000) * 100}%,
-                  #0ea5e9 ${(priceRange[0] / 1000) * 100}%,
-                  #0ea5e9 ${(priceRange[1] / 1000) * 100}%,
-                  #e5e7eb ${(priceRange[1] / 1000) * 100}%,
-                  #e5e7eb 100%)`
-              }}
-            />
-            <input
-              type="range"
-              min="0"
-              max="1000"
-              step="10"
-              value={priceRange[1]}
-              onChange={(e) => handlePriceChange(1, parseInt(e.target.value))}
-              className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer"
-            />
-          </div>
-        </div>
+        <h4 className="font-medium text-gray-900 dark:text-gray-100">Price Range</h4>
+        <Slider
+          value={priceRange}
+          onValueChange={(value) => setPriceRange(value as [number, number])}
+          max={1000}
+          min={0}
+          step={10}
+        />
       </div>
       
       {/* Minimum Rating */}
       <div className="space-y-3">
-        <h4 className="font-medium text-gray-900">Minimum Rating</h4>
+        <h4 className="font-medium text-gray-900 dark:text-gray-100">Minimum Rating</h4>
         <div className="space-y-2">
           {ratings.map((rating) => (
             <button
