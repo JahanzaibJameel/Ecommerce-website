@@ -14,8 +14,6 @@ export const metadata: Metadata = {
   description: 'The ultimate e-commerce experience with modern design and exceptional performance',
   keywords: ['ecommerce', 'shopping', 'nextjs', 'typescript'],
   manifest: '/manifest.json',
-  themeColor: '#0ea5e9',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
   robots: 'index, follow',
   openGraph: {
     title: 'UltimateShop - Premium E-commerce',
@@ -28,6 +26,13 @@ export const metadata: Metadata = {
     title: 'UltimateShop - Premium E-commerce',
     description: 'The ultimate e-commerce experience with modern design and exceptional performance',
   },
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: '#0ea5e9',
 }
 
 export default function RootLayout({

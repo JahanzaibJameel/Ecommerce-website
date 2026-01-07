@@ -7,7 +7,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/a
 class ApiClient {
   private async request<T>(
     endpoint: string,
-    options: RequestInit & { params?: Record<string, any> } = {}
+    options: RequestInit & { params?: Record<string, string | number | boolean> } = {}
   ): Promise<T> {
     const { params, ...fetchOptions } = options
     let url = `${API_BASE_URL}${endpoint}`

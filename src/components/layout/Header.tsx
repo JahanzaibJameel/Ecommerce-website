@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingCart, Heart, Search, User, Menu, X, Moon, Sun, BarChart3 } from 'lucide-react'
+import { Search, User, Menu, X, Moon, Sun, BarChart3 } from 'lucide-react'
 import { useCartStore } from '@/stores/cart.store'
 import { useUIStore } from '@/stores/ui.store'
 import { useFiltersStore } from '@/stores/filters.store'
@@ -14,9 +14,7 @@ import { AdvancedSearch } from '@/components/shared/AdvancedSearch'
 import { PerformanceDashboard } from '@/components/shared/PerformanceDashboard'
 
 export const Header: React.FC = () => {
-  const router = useRouter()
   const { getItemCount } = useCartStore()
-  const { setSearchQuery: setGlobalSearch } = useFiltersStore()
   const { theme, toggleTheme } = useTheme()
   const {
     isMobileMenuOpen,
@@ -70,12 +68,13 @@ export const Header: React.FC = () => {
   }
 
   return (
-    <motion.header
-      className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur-xl supports-[backdrop-filter]:bg-white/80 shadow-sm"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
+    <>
+      <motion.header
+        className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur-xl supports-[backdrop-filter]:bg-white/80 shadow-sm"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -101,7 +100,7 @@ export const Header: React.FC = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
-            {navigation.map((item, _index) => (
+            {navigation.map((item) => (
               <motion.div
                 key={item.name}
                 variants={navItemVariants}
@@ -330,6 +329,13 @@ export const Header: React.FC = () => {
             </motion.nav>
           )}
         </AnimatePresence>
-    </motion.header>
+      </motion.header>
+
+      {/* Performance Dashboard */}
+      <PerformanceDashboard
+        isOpen={showPerformanceDashboard}
+        onClose={() => setShowPerformanceDashboard(false)}
+      />
+    </>
   )
 }

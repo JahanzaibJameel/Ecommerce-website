@@ -42,13 +42,6 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
     memory: ''
   })
 
-  useEffect(() => {
-    if (isOpen) {
-      updateMetrics()
-      collectSystemInfo()
-    }
-  }, [isOpen])
-
   const updateMetrics = () => {
     setIsRefreshing(true)
     setMetrics(performanceMonitor.getMetrics())
@@ -68,12 +61,21 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 
     // Performance.memory is not standard but available in Chrome
     if ('memory' in performance) {
-      const mem = (performance as any).memory
-      info.memory = `${Math.round(mem.usedJSHeapSize / 1024 / 1024)}MB used`
+      const mem = (performance as { memory?: { usedJSHeapSize: number } }).memory
+      if (mem) {
+        info.memory = `${Math.round(mem.usedJSHeapSize / 1024 / 1024)}MB used`
+      }
     }
 
     setSystemInfo(info)
   }
+
+  useEffect(() => {
+    if (isOpen) {
+      updateMetrics()
+      collectSystemInfo()
+    }
+  }, [isOpen])
 
   const formatMetricValue = (name: string, value: number) => {
     if (name.includes('LCP') || name.includes('render')) {
@@ -256,8 +258,8 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
                           </p>
                           {metric.metadata && (
                             <p className="text-xs text-gray-500">
-                              {metric.metadata.element && `Element: ${(metric.metadata.element as string).substring(0, 20)}...`}
-                              {metric.metadata.url && `URL: ${(metric.metadata.url as string).substring(0, 30)}...`}
+                              {metric.metadata.element && typeof metric.metadata.element === 'string' ? `Element: ${metric.metadata.element.substring(0, 20)}...` : ''}
+                              {metric.metadata.url && typeof metric.metadata.url === 'string' ? `URL: ${metric.metadata.url.substring(0, 30)}...` : ''}
                             </p>
                           )}
                         </div>

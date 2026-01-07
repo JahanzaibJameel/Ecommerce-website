@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -31,8 +31,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const { isInWishlist: wishlistIsInWishlist, toggleItem } = useWishlistStore()
   const { addToast } = useUIStore()
   
+  const [mounted, setMounted] = useState(false)
+  
+  useLayoutEffect(() => {
+    setMounted(true)
+  }, [])
+  
   const isInCart = externalIsInCart ?? cartIsInCart(product.id)
-  const isInWishlist = externalIsInWishlist ?? wishlistIsInWishlist(product.id)
+  const isInWishlist = mounted ? (externalIsInWishlist ?? wishlistIsInWishlist(product.id)) : false
   
   const handleAddToCart = () => {
     addItem({
@@ -130,12 +136,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         'relative overflow-hidden bg-gray-50',
         variant === 'grid' && 'aspect-square',
         variant === 'list' && 'w-48 h-48 flex-shrink-0'
-      )} style={{ position: 'relative' }}>
+      )}>
         <motion.div
-          className="w-full h-full"
+          className="w-full h-full relative"
           variants={imageVariants}
           whileHover="hover"
-          style={{ position: 'relative' }}
         >
           <Image
             src={product.imageUrl}
@@ -162,20 +167,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               disabled={isLoading}
             >
               <ShoppingCart className="h-5 w-5" />
-            </motion.button>
-
-            <motion.button
-              onClick={handleWishlistToggle}
-              className={cn(
-                "p-3 rounded-full shadow-lg transition-colors duration-200",
-                isInWishlist
-                  ? "bg-red-500 text-white"
-                  : "bg-white text-gray-900 hover:bg-red-500 hover:text-white"
-              )}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <Heart className={cn("h-5 w-5", isInWishlist && "fill-current")} />
             </motion.button>
 
             <motion.button
@@ -243,10 +234,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       
       {/* Product Image */}
       <div className={cn(
-        'relative overflow-hidden bg-gray-100',
+        'overflow-hidden bg-gray-100',
         variant === 'grid' && 'aspect-square rounded-t-lg',
         variant === 'list' && 'w-32 h-32 rounded-l-lg'
-      )}>
+      )} style={{ position: 'relative' }}>
         <Link href={`/product/${product.id}`}>
           <Image
             src={product.imageUrl}

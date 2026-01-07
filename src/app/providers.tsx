@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState, useLayoutEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toast } from '@/components/ui/Toast'
@@ -16,10 +16,9 @@ const ThemeContext = createContext<{
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('light')
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState(true)
 
-  useEffect(() => {
-    setMounted(true)
+  useLayoutEffect(() => {
     const saved = localStorage.getItem('theme') as Theme
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 

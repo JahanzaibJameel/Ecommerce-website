@@ -1,5 +1,5 @@
 // Simple boolean flags for frontend features
-export const FEATURE_FLAGS: Record<string, any> = {
+export const FEATURE_FLAGS: Record<string, boolean> = {
   // Release 1.0 features
   enableWishlist: true,
   enableProductReviews: false, // Launch without reviews

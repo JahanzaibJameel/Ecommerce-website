@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -24,6 +24,12 @@ export default function ProductDetailPage() {
   const { addItem } = useCartStore()
   const { toggleItem, isInWishlist } = useWishlistStore()
   const { addToast } = useUIStore()
+  
+  const [mounted, setMounted] = useState(false)
+  
+  useLayoutEffect(() => {
+    setMounted(true)
+  }, [])
   
   const [quantity, setQuantity] = useState(1)
   const [selectedImage, setSelectedImage] = useState(0)
@@ -78,9 +84,9 @@ export default function ProductDetailPage() {
     toggleItem(product)
     
     addToast({
-      type: isInWishlist(product.id) ? 'info' : 'success',
-      title: isInWishlist(product.id) ? 'Removed from wishlist' : 'Added to wishlist',
-      description: isInWishlist(product.id) 
+      type: mounted && isInWishlist(product.id) ? 'info' : 'success',
+      title: mounted && isInWishlist(product.id) ? 'Removed from wishlist' : 'Added to wishlist',
+      description: mounted && isInWishlist(product.id) 
         ? `${product.name} removed from wishlist`
         : `${product.name} added to wishlist`,
       duration: 3000,
@@ -358,9 +364,9 @@ export default function ProductDetailPage() {
                 className="flex-1"
               >
                 <Heart className={`h-5 w-5 mr-2 ${
-                  isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''
+                  mounted && isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''
                 }`} />
-                {isInWishlist(product.id) ? 'In Wishlist' : 'Add to Wishlist'}
+                {mounted && isInWishlist(product.id) ? 'In Wishlist' : 'Add to Wishlist'}
               </Button>
             </div>
             

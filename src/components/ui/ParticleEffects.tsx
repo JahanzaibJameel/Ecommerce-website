@@ -32,7 +32,7 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<Particle[]>([])
-  const animationRef = useRef<number>()
+  const animationRef = useRef<number | null>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -141,15 +141,25 @@ export const FloatingElements: React.FC<FloatingElementsProps> = ({
   count = 10,
   className = ''
 }) => {
+  const particles = React.useMemo(() => 
+    Array.from({ length: count }).map(() => ({
+      x: Math.random() * 100,
+      y: Math.random() * 100, 
+      duration: Math.random() * 10 + 10,
+      delay: Math.random() * 5,
+      left: Math.random() * 100
+    })), [count]
+  )
+
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
-      {Array.from({ length: count }).map((_, i) => (
+      {particles.map((particle, i) => (
         <motion.div
           key={i}
           className="absolute w-2 h-2 bg-primary-500/20 rounded-full"
           initial={{
-            x: Math.random() * 100 + '%',
-            y: Math.random() * 100 + '%',
+            x: particle.x + '%',
+            y: particle.y + '%',
             scale: 0
           }}
           animate={{
@@ -158,13 +168,13 @@ export const FloatingElements: React.FC<FloatingElementsProps> = ({
             rotate: [0, 360]
           }}
           transition={{
-            duration: Math.random() * 10 + 10,
+            duration: particle.duration,
             repeat: Infinity,
-            delay: Math.random() * 5,
+            delay: particle.delay,
             ease: 'linear'
           }}
           style={{
-            left: Math.random() * 100 + '%'
+            left: particle.left + '%'
           }}
         />
       ))}

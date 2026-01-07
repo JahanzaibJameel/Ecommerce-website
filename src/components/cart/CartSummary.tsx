@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { Button } from '@/components/ui/Button'
 import { formatPrice } from '@/lib/utils'
 import Link from 'next/link'
 

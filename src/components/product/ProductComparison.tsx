@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Check, Star, Heart, ShoppingCart, BarChart3 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -8,20 +9,7 @@ import { useUIStore } from '@/stores/ui.store'
 import { useCartStore } from '@/stores/cart.store'
 import { useWishlistStore } from '@/stores/wishlist.store'
 import { formatPrice } from '@/lib/utils'
-
-interface Product {
-  id: string
-  name: string
-  price: number
-  originalPrice?: number
-  rating: number
-  reviewCount: number
-  imageUrl: string
-  category: string
-  inStock: boolean
-  features: string[]
-  specifications: Record<string, string>
-}
+import { Product } from '@/types'
 
 interface ProductComparisonProps {
   products: Product[]
@@ -37,6 +25,12 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
   const { addItem } = useCartStore()
   const { toggleItem, isInWishlist } = useWishlistStore()
   const { addToast } = useUIStore()
+  
+  const [mounted, setMounted] = useState(false)
+  
+  useLayoutEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleAddToCart = (product: Product) => {
     addItem({
@@ -57,9 +51,9 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
   const handleWishlistToggle = (product: Product) => {
     toggleItem(product)
     addToast({
-      type: isInWishlist(product.id) ? 'info' : 'success',
-      title: isInWishlist(product.id) ? 'Removed from wishlist' : 'Added to wishlist',
-      description: isInWishlist(product.id)
+      type: mounted && isInWishlist(product.id) ? 'info' : 'success',
+      title: mounted && isInWishlist(product.id) ? 'Removed from wishlist' : 'Added to wishlist',
+      description: mounted && isInWishlist(product.id)
         ? `${product.name} removed from wishlist`
         : `${product.name} added to wishlist`,
       duration: 3000
@@ -68,7 +62,7 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
 
   // Get all unique specifications across products
   const allSpecs = Array.from(
-    new Set(products.flatMap(product => Object.keys(product.specifications)))
+    new Set(products.flatMap(product => Object.keys(product.specifications ?? {})))
   )
 
   return (
@@ -127,10 +121,12 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
 
                     {/* Product Image */}
                     <div className="aspect-square bg-white rounded-lg mb-4 overflow-hidden">
-                      <img
+                      <Image
                         src={product.imageUrl}
                         alt={product.name}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                     </div>
 
@@ -175,12 +171,12 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
                       {/* Stock Status */}
                       <div className="flex items-center space-x-2">
                         <div className={`w-2 h-2 rounded-full ${
-                          product.inStock ? 'bg-green-500' : 'bg-red-500'
+                          product.stock > 0 ? 'bg-green-500' : 'bg-red-500'
                         }`} />
                         <span className={`text-sm ${
-                          product.inStock ? 'text-green-700' : 'text-red-700'
+                          product.stock > 0 ? 'text-green-700' : 'text-red-700'
                         }`}>
-                          {product.inStock ? 'In Stock' : 'Out of Stock'}
+                          {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
                         </span>
                       </div>
 
@@ -190,7 +186,7 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
                           size="sm"
                           className="flex-1"
                           onClick={() => handleAddToCart(product)}
-                          disabled={!product.inStock}
+                          disabled={product.stock <= 0}
                         >
                           <ShoppingCart className="w-4 h-4 mr-2" />
                           Add to Cart
@@ -201,7 +197,7 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
                           onClick={() => handleWishlistToggle(product)}
                         >
                           <Heart className={`w-4 h-4 ${
-                            isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''
+                            mounted && isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''
                           }`} />
                         </Button>
                       </div>
@@ -236,7 +232,7 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
                             </td>
                             {products.map((product) => (
                               <td key={product.id} className="py-3 px-4 text-center text-gray-700">
-                                {product.specifications[spec] || '-'}
+                                {product.specifications?.[spec] || '-'}
                               </td>
                             ))}
                           </tr>
@@ -255,7 +251,7 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
                     <div key={product.id} className="space-y-2">
                       <h4 className="font-medium text-gray-900">{product.name}</h4>
                       <ul className="space-y-1">
-                        {product.features.map((feature, index) => (
+                        {product.features?.map((feature, index) => (
                           <li key={index} className="flex items-center space-x-2 text-sm text-gray-600">
                             <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
                             <span>{feature}</span>

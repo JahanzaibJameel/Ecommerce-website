@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, Filter, X, TrendingUp, Clock, Star } from 'lucide-react'
 import { useFiltersStore } from '@/stores/filters.store'
@@ -15,10 +15,10 @@ interface AdvancedSearchProps {
 
 export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({ className }) => {
   const [query, setQuery] = useState('')
-  const [suggestions, setSuggestions] = useState<any[]>([])
+  const [suggestions, setSuggestions] = useState<{id: string, name: string, category: string, price: number}[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [recentSearches, setRecentSearches] = useState<string[]>([])
-  const [trendingSearches, setTrendingSearches] = useState<string[]>([])
+  const [trendingSearches, setTrendingSearches] = useState<string[]>(['wireless headphones', 'smart watch', 'laptop', 'phone case', 'gaming mouse'])
   const [isLoading, setIsLoading] = useState(false)
 
   const searchRef = useRef<HTMLDivElement>(null)
@@ -26,14 +26,11 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({ className }) => 
   const router = useRouter()
 
   // Load recent searches from localStorage
-  useEffect(() => {
+  useLayoutEffect(() => {
     const recent = localStorage.getItem('recentSearches')
     if (recent) {
       setRecentSearches(JSON.parse(recent))
     }
-
-    // Mock trending searches
-    setTrendingSearches(['wireless headphones', 'smart watch', 'laptop', 'phone case', 'gaming mouse'])
   }, [])
 
   // Handle search input

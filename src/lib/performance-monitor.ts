@@ -62,7 +62,7 @@ class PerformanceMonitor {
         const lastEntry = entries[entries.length - 1]
         
         this.trackMetric('LCP', lastEntry.startTime, {
-          element: (lastEntry as any).element?.tagName,
+          element: (lastEntry as PerformanceEntry & { element?: Element }).element?.tagName,
           url: lastEntry.name,
         })
       })
@@ -77,8 +77,9 @@ class PerformanceMonitor {
       
       this.clsObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          if (!(entry as any).hadRecentInput) {
-            clsValue += (entry as any).value
+          const layoutShiftEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number }
+          if (!layoutShiftEntry.hadRecentInput) {
+            clsValue += layoutShiftEntry.value || 0
           }
         }
         

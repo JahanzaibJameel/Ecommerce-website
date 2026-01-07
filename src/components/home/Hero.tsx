@@ -4,7 +4,6 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { ChevronRight, ShoppingBag, Shield, Truck, Star } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { cn } from '@/lib/utils'
 import Link from 'next/link'
 
 export const Hero: React.FC = () => {

@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { ShoppingCart, ArrowLeft, Trash2 } from 'lucide-react'
+import { ShoppingCart, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useCartStore } from '@/stores/cart.store'
 import { Button } from '@/components/ui/Button'

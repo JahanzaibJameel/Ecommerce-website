@@ -8,20 +8,7 @@
   "theme_color": "#0ea5e9",
   "orientation": "portrait-primary",
   "scope": "/",
-  "icons": [
-    {
-      "src": "/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
+  "icons": [],
   "categories": ["shopping", "lifestyle"],
   "lang": "en-US",
   "dir": "ltr",
@@ -31,22 +18,19 @@
       "name": "Shop Now",
       "short_name": "Shop",
       "description": "Browse our latest products",
-      "url": "/shop",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+      "url": "/shop"
     },
     {
       "name": "My Cart",
       "short_name": "Cart",
       "description": "View your shopping cart",
-      "url": "/cart",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+      "url": "/cart"
     },
     {
       "name": "Wishlist",
       "short_name": "Wishlist",
       "description": "View your saved items",
-      "url": "/wishlist",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+      "url": "/wishlist"
     }
   ]
 }
