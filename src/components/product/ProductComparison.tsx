@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useLayoutEffect } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Check, Star, Heart, ShoppingCart, BarChart3 } from 'lucide-react'
@@ -24,12 +24,6 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
   const { addItem } = useCartStore()
   const { toggleItem, isInWishlist } = useWishlistStore()
   const { addToast } = useUIStore()
-  
-  const [mounted, setMounted] = useState(false)
-  
-  useLayoutEffect(() => {
-    setMounted(true)
-  }, [])
 
   const handleAddToCart = (product: Product) => {
     addItem({
@@ -50,9 +44,9 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
   const handleWishlistToggle = (product: Product) => {
     toggleItem(product)
     addToast({
-      type: mounted && isInWishlist(product.id) ? 'info' : 'success',
-      title: mounted && isInWishlist(product.id) ? 'Removed from wishlist' : 'Added to wishlist',
-      description: mounted && isInWishlist(product.id)
+      type: isInWishlist(product.id) ? 'info' : 'success',
+      title: isInWishlist(product.id) ? 'Removed from wishlist' : 'Added to wishlist',
+      description: isInWishlist(product.id)
         ? `${product.name} removed from wishlist`
         : `${product.name} added to wishlist`,
       duration: 3000
@@ -196,7 +190,7 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
                           onClick={() => handleWishlistToggle(product)}
                         >
                           <Heart className={`w-4 h-4 ${
-                            mounted && isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''
+                            isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''
                           }`} />
                         </Button>
                       </div>

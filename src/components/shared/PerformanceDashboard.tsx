@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   BarChart3,
   TrendingUp,
-  Clock,
   Zap,
   Monitor,
   Smartphone,
@@ -49,9 +48,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
     setTimeout(() => {
       setIsRefreshing(false)
     }, 500)
-  }
 
-  const collectSystemInfo = () => {
     const info = {
       userAgent: navigator.userAgent,
       screenSize: `${window.screen.width}x${window.screen.height}`,
@@ -72,8 +69,8 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       updateMetrics()
-      collectSystemInfo()
     }
   }, [isOpen])
 

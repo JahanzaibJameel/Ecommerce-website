@@ -1,5 +1,4 @@
 // Service Worker for PWA functionality
-const CACHE_NAME = 'ultimateshop-v1'
 const STATIC_CACHE = 'ultimateshop-static-v1'
 const DYNAMIC_CACHE = 'ultimateshop-dynamic-v1'
 

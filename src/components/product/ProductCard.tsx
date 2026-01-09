@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useLayoutEffect } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -31,14 +31,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const { isInWishlist: wishlistIsInWishlist, toggleItem } = useWishlistStore()
   const { addToast } = useUIStore()
   
-  const [mounted, setMounted] = useState(false)
-  
-  useLayoutEffect(() => {
-    setMounted(true)
-  }, [])
-  
   const isInCart = externalIsInCart ?? cartIsInCart(product.id)
-  const isInWishlist = mounted ? (externalIsInWishlist ?? wishlistIsInWishlist(product.id)) : false
+  const isInWishlist = externalIsInWishlist ?? wishlistIsInWishlist(product.id)
   
   const handleAddToCart = () => {
     addItem({

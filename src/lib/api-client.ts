@@ -9,7 +9,7 @@ class ApiClient {
     endpoint: string,
     options: RequestInit & { params?: Record<string, string | number | boolean> } = {}
   ): Promise<T> {
-    const { params, ...fetchOptions } = options
+    const { params } = options
     let url = `${API_BASE_URL}${endpoint}`
     
     if (params) {
@@ -52,10 +52,26 @@ class ApiClient {
   
   // Product endpoints
   products = {
-    getAll: (params?: Partial<FilterState>) => 
-      this.request<ApiResponse<Product[]>>('/products', { 
-        params 
-      }),
+    getAll: (params?: Partial<FilterState>) => {
+      // Transform FilterState to API params
+      const apiParams: Record<string, string | number | boolean> = {}
+      if (params) {
+        if (params.category) apiParams.category = params.category
+        if (params.priceRange) {
+          apiParams.minPrice = params.priceRange[0]
+          apiParams.maxPrice = params.priceRange[1]
+        }
+        if (params.minRating !== undefined) apiParams.minRating = params.minRating
+        if (params.sortBy) apiParams.sortBy = params.sortBy
+        if (params.searchQuery) apiParams.searchQuery = params.searchQuery
+        if (params.inStockOnly !== undefined) apiParams.inStockOnly = params.inStockOnly
+        if (params.onSaleOnly !== undefined) apiParams.onSaleOnly = params.onSaleOnly
+        if (params.tags && params.tags.length > 0) apiParams.tags = params.tags.join(',')
+      }
+      return this.request<ApiResponse<Product[]>>('/products', { 
+        params: apiParams 
+      })
+    },
     
     getById: (id: string) => 
       this.request<ApiResponse<Product>>(`/products/${id}`),

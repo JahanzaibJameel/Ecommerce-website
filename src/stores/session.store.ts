@@ -8,7 +8,7 @@ interface SessionStore {
   isLoading: boolean
   
   // Actions
-  login: (email: string, password: string) => Promise<void>
+  login: (email: string) => Promise<void>
   logout: () => void
   setUser: (user: User) => void
   setLoading: (loading: boolean) => void
@@ -21,7 +21,7 @@ export const useSessionStore = create<SessionStore>()(
       isAuthenticated: false,
       isLoading: false,
       
-      login: async (email: string, password: string) => {
+      login: async (email: string) => {
         set({ isLoading: true })
         
         try {

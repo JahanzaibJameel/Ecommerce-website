@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useEffect, useState, useLayoutEffect } from 'react'
+import React, { createContext, useContext, useState, useLayoutEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toast } from '@/components/ui/Toast'
@@ -15,31 +15,28 @@ const ThemeContext = createContext<{
 } | null>(null)
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light')
-  const [mounted, setMounted] = useState(true)
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme') as Theme
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      return saved || (systemPrefersDark ? 'dark' : 'light')
+    }
+    return 'light'
+  })
 
   useLayoutEffect(() => {
-    const saved = localStorage.getItem('theme') as Theme
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-
-    const initialTheme = saved || (systemPrefersDark ? 'dark' : 'light')
-    setTheme(initialTheme)
-    document.documentElement.classList.toggle('dark', initialTheme === 'dark')
+    document.documentElement.classList.toggle('dark', theme === 'dark')
 
     // Initialize performance monitoring
     performanceMonitor.trackLCP()
     performanceMonitor.trackCLS()
-  }, [])
+  }, [theme])
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
     setTheme(newTheme)
     localStorage.setItem('theme', newTheme)
     document.documentElement.classList.toggle('dark', newTheme === 'dark')
-  }
-
-  if (!mounted) {
-    return <>{children}</>
   }
 
   return (

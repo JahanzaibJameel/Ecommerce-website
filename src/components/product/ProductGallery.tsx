@@ -1,14 +1,9 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ChevronLeft, ChevronRight, ZoomIn, Heart, Share2, Star } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
-import { useCartStore } from '@/stores/cart.store'
-import { useWishlistStore } from '@/stores/wishlist.store'
-import { useUIStore } from '@/stores/ui.store'
-import { formatPrice, calculateDiscount } from '@/lib/utils'
+import { ChevronLeft, ChevronRight, ZoomIn, Heart, Share2 } from 'lucide-react'
 
 interface ProductGalleryProps {
   images: string[]

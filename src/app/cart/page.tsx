@@ -4,7 +4,6 @@ import React from 'react'
 import { ShoppingCart, ArrowLeft, Trash } from 'lucide-react'
 import Link from 'next/link'
 import { useCartStore } from '@/stores/cart.store'
-import { Button } from '@/components/ui/Button'
 import { formatPrice } from '@/lib/utils'
 import { CartItem } from '@/components/cart/CartItem'
 

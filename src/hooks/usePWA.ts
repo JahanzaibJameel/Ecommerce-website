@@ -1,18 +1,18 @@
 'use client'
 
-import { useEffect, useState, useLayoutEffect } from 'react'
+import { useState, useLayoutEffect } from 'react'
 
 export const usePWA = () => {
   const [isInstallable, setIsInstallable] = useState(false)
-  const [isInstalled, setIsInstalled] = useState(false)
-  const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null)
+  const [isInstalled, setIsInstalled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(display-mode: standalone)').matches
+    }
+    return false
+  })
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
 
   useLayoutEffect(() => {
-    // Check if app is already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setIsInstalled(true)
-    }
-
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault()

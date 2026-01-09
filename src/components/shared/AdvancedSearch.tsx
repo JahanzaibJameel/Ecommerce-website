@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, Filter, X, TrendingUp, Clock, Star } from 'lucide-react'
+import { Search, TrendingUp, Clock, Star } from 'lucide-react'
 import { useFiltersStore } from '@/stores/filters.store'
 import { useRouter } from 'next/navigation'
 import { mockProducts } from '@/lib/mock-data'
@@ -15,27 +15,28 @@ interface AdvancedSearchProps {
 
 export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({ className }) => {
   const [query, setQuery] = useState('')
-  const [suggestions, setSuggestions] = useState<{id: string, name: string, category: string, price: number}[]>([])
+  const [suggestions, setSuggestions] = useState<{id: string, name: string, category: string, price: number, rating: number}[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
-  const [recentSearches, setRecentSearches] = useState<string[]>([])
-  const [trendingSearches, setTrendingSearches] = useState<string[]>(['wireless headphones', 'smart watch', 'laptop', 'phone case', 'gaming mouse'])
+  const [recentSearches, setRecentSearches] = useState<string[]>(() => {
+    if (typeof window !== 'undefined') {
+      const recent = localStorage.getItem('recentSearches')
+      return recent ? JSON.parse(recent) : []
+    }
+    return []
+  })
+  const [trendingSearches] = useState<string[]>(['wireless headphones', 'smart watch', 'laptop', 'phone case', 'gaming mouse'])
   const [isLoading, setIsLoading] = useState(false)
+  const loadingRef = useRef(false)
 
   const searchRef = useRef<HTMLDivElement>(null)
   const { setSearchQuery } = useFiltersStore()
   const router = useRouter()
 
-  // Load recent searches from localStorage
-  useLayoutEffect(() => {
-    const recent = localStorage.getItem('recentSearches')
-    if (recent) {
-      setRecentSearches(JSON.parse(recent))
-    }
-  }, [])
-
   // Handle search input
   useEffect(() => {
     if (query.length > 1) {
+      loadingRef.current = true
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsLoading(true)
 
       // Debounce search suggestions
@@ -44,15 +45,23 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({ className }) => 
           product.name.toLowerCase().includes(query.toLowerCase()) ||
           product.description.toLowerCase().includes(query.toLowerCase()) ||
           product.category.toLowerCase().includes(query.toLowerCase())
-        ).slice(0, 5)
+        ).slice(0, 5).map(product => ({
+          id: product.id,
+          name: product.name,
+          category: product.category,
+          price: product.price,
+          rating: product.rating
+        }))
 
         setSuggestions(filteredProducts)
+        loadingRef.current = false
         setIsLoading(false)
       }, 300)
 
       return () => clearTimeout(timer)
     } else {
       setSuggestions([])
+      loadingRef.current = false
       setIsLoading(false)
     }
   }, [query])

@@ -141,19 +141,20 @@ export const FloatingElements: React.FC<FloatingElementsProps> = ({
   count = 10,
   className = ''
 }) => {
-  const particles = React.useMemo(() => 
+  // Move random generation to effect or use lazy state
+  const [randomParticles] = React.useState(() =>
     Array.from({ length: count }).map(() => ({
       x: Math.random() * 100,
-      y: Math.random() * 100, 
+      y: Math.random() * 100,
       duration: Math.random() * 10 + 10,
       delay: Math.random() * 5,
       left: Math.random() * 100
-    })), [count]
+    }))
   )
 
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
-      {particles.map((particle, i) => (
+      {randomParticles.map((particle, i) => (
         <motion.div
           key={i}
           className="absolute w-2 h-2 bg-primary-500/20 rounded-full"

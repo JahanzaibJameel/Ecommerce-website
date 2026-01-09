@@ -1,5 +1,5 @@
 // Simple boolean flags for frontend features
-export const FEATURE_FLAGS: Record<string, boolean> = {
+const FEATURE_FLAG_VALUES: Record<string, boolean> = {
   // Release 1.0 features
   enableWishlist: true,
   enableProductReviews: false, // Launch without reviews
@@ -10,42 +10,47 @@ export const FEATURE_FLAGS: Record<string, boolean> = {
   enableOrderTracking: true,
   enableProductComparison: false,
   enableBulkActions: true,
-  
+
   // Environment-based flags
   enableAnalytics: process.env.NODE_ENV === 'production',
   enableMockData: process.env.NODE_ENV === 'development',
   enablePerformanceMonitoring: true,
-  
+
   // A/B Testing flags
   enableNewCheckoutFlow: false, // 50% rollout
   enableProductRecommendations: true,
-  
+}
+
+// Feature flag utilities
+export const FEATURE_FLAGS = {
+  ...FEATURE_FLAG_VALUES,
+
   // Toggle function with environment support
-  isEnabled: (flag: keyof typeof FEATURE_FLAGS): boolean => {
-    const value = FEATURE_FLAGS[flag]
-    
+  isEnabled: (flag: keyof typeof FEATURE_FLAG_VALUES): boolean => {
+    const value = FEATURE_FLAG_VALUES[flag]
+
     // Environment checks
     if (flag === 'enableAnalytics' && process.env.NODE_ENV !== 'production') {
       return false
     }
-    
+
     // A/B testing logic (example)
     if (flag === 'enableNewCheckoutFlow') {
       return Math.random() < 0.5 // 50% chance
     }
-    
+
     return value
   },
-  
+
   // Get all active features
   getActiveFeatures: () => {
-    return Object.entries(FEATURE_FLAGS)
-      .filter(([, value]) => typeof value === 'boolean' && value)
+    return Object.entries(FEATURE_FLAG_VALUES)
+      .filter(([, value]) => value)
       .map(([featureKey]) => featureKey)
   },
-  
+
   // Feature status check for UI
-  getFeatureStatus: (flag: keyof typeof FEATURE_FLAGS) => {
+  getFeatureStatus: (flag: keyof typeof FEATURE_FLAG_VALUES) => {
     const isActive = FEATURE_FLAGS.isEnabled(flag)
     return {
       isActive,
